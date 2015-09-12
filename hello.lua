@@ -2,6 +2,8 @@ local json = require("cjson")
 local r = require("resty.redis")
 local redis = r:new()
 
+redis:set_timeout(1000)
+
 ngx.req.get_body_data()
 
 local ok, error = redis:connect("127.0.0.1", 6379)
@@ -14,11 +16,11 @@ end
 local lib = {}
 local ret = {}
 
-function try(f)
-    local status, exception = pcall(f)
+function lib.try(f, args)
+    local status = pcall(f, args and unpack(args) or nil)
 
     if not status then
-        return nil
+        return
     else
         return f()
     end
@@ -42,35 +44,23 @@ function lib.get_file()
 end
 
 
-ret.headers = try(lib.get_headers)
-ret.get = try(lib.get_uri)
-ret.post = try(lib.get_body)
-ret.file = try(lib.get_file)
+ret.headers = lib.try(lib.get_headers)
+ret.get     = lib.try(lib.get_uri)
+ret.post    = lib.try(lib.get_body)
+ret.file    = lib.try(lib.get_file)
 
+local exists = redis:get(ngx.var.remote_addr)
 
-local ok, error = redis:set(ngx.var.remote_addr, json.encode(ret))
-
-if not ok then
-    ngx.say("unable to set in redis: ", error)
-    return
+if exists then
+    prior_records = json.decode(exists)
+    prior_records[#prior_records] = ret
+    redis:set(ngx.var.remote_addr, json.encode(prior_records))
+else
+    redis:set(ngx.var.remote_addr, {json.encode(ret)})
 end
 
 
-ngx.say([[
+redis:close()
 
-    <!doctype html>
-
-    <html>
-
-    <head>
-        <title>My Website</title>
-    </head>
-
-    <body>
-        <h1>This is my new website</h1>
-        <p>]] .. json.encode(ret) .. [[</p>
-    </body>
-
-    </html>
-
-]])
+ngx.resp.headers["Content-Type"] = "application/json"
+ngx.say(json.encode(ret))
