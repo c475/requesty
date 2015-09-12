@@ -12,41 +12,40 @@ if not ok then
 end
 
 
-local lib = {}
 local ret = {}
 
 function try(f)
     local status, exception = pcall(f)
 
     if not status then
-        return nil
+        return
     else
-        return f(nil)
+        return f()
     end
 end
 
 
-function lib.get_headers()
+function get_headers()
     return ngx.req.get_headers()
 end
 
-function lib.get_uri()
+function get_uri()
     return ngx.req.get_uri_args()
 end
 
-function lib.get_body()
+function get_body()
     return ngx.req.get_post_args
 end
 
-function lib.get_file()
+function get_file()
     return ngx.req.get_body_file()
 end
 
 
-ret.headers = try(lib.get_headers)
-ret.get = try(lib.get_uri)
-ret.post = try(lib.get_body)
-ret.file = try(lib.get_file)
+ret.headers = try(get_headers)
+ret.get = try(get_uri)
+ret.post = try(get_body)
+ret.file = try(get_file)
 
 
 local ok, error = redis:set(ngx.var.remote_addr, json.encode(ret))
