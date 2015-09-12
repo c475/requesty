@@ -2,6 +2,7 @@ local json = require("cjson")
 local r = require("resty.redis")
 local redis = r:new()
 
+ngx.req.get_body_data()
 
 local ok, error = redis:connect("127.0.0.1", 6379)
 
@@ -20,29 +21,27 @@ function try(f)
     if not status then
         return nil
     else
-        return status
+        return f(nil)
     end
 end
 
 
-function lib.get_headers ()
+function lib.get_headers()
     return ngx.req.get_headers()
 end
 
-function lib.get_uri ()
+function lib.get_uri()
     return ngx.req.get_uri_args()
 end
 
-function lib.get_body ()
+function lib.get_body()
     return ngx.req.get_post_args
 end
 
-function lib.get_file ()
+function lib.get_file()
     return ngx.req.get_body_file()
 end
 
-
-ngx.req.get_body_data()
 
 ret.headers = try(lib.get_headers)
 ret.get = try(lib.get_uri)
