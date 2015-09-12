@@ -2,7 +2,7 @@ local r = require("resty.redis")
 local redis = r:new()
 
 -- 1 second timeout
-redis.timeout(1000)
+redis:timeout(1000)
 
 local ok, error = redis:connect("127.0.0.1", 6379)
 
