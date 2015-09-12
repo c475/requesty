@@ -43,18 +43,18 @@ ret.get     = lib.try(lib.get_uri)
 ret.post    = lib.try(lib.get_body)
 ret.file    = lib.try(lib.get_file)
 
-ngx.say(redis:get(ngx.var.remote_addr))
+local exists = redis:get(ngx.var.remote_addr)
 
--- if exists then
---     prior_records = json.decode(exists)
---     prior_records[#prior_records] = ret
---     redis:set(ngx.var.remote_addr, json.encode(prior_records))
--- else
---     redis:set(ngx.var.remote_addr, json.encode({ret}))
--- end
+if type(exists) ~= "userdata" then
+    prior_records = json.decode(exists)
+    prior_records[#prior_records] = ret
+    redis:set(ngx.var.remote_addr, json.encode(prior_records))
+else
+    redis:set(ngx.var.remote_addr, json.encode({ret}))
+end
 
 
--- redis:close()
+redis:close()
 
--- ngx.header.content_type = "application/json"
--- ngx.say(json.encode(ret))
+ngx.header.content_type = "application/json"
+ngx.say(json.encode(ret))
