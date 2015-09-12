@@ -1,3 +1,4 @@
+local json = require("cjson")
 local r = require("resty.redis")
 local redis = r:new()
 
