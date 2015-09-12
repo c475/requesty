@@ -43,7 +43,7 @@ ret.get     = lib.try(lib.get_uri)
 ret.post    = lib.try(lib.get_body)
 ret.file    = lib.try(lib.get_file)
 
-nxg.say(redis:get(ngx.var.remote_addr))
+ngx.say(redis:get(ngx.var.remote_addr))
 
 -- if exists then
 --     prior_records = json.decode(exists)
