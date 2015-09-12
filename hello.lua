@@ -20,7 +20,7 @@ function try(f)
     if not status then
         return nil
     else
-        return f()
+        return status
     end
 end
 
