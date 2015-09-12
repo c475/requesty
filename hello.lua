@@ -57,4 +57,9 @@ end
 redis:close()
 
 ngx.header.content_type = "application/json"
-ngx.say(prior_records or json.encode({ret}))
+
+if prior_records then
+    ngx.say(prior_records)
+else
+    ngx.say(json.encode({ret}))
+end
