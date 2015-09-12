@@ -62,5 +62,5 @@ end
 
 redis:close()
 
-ngx.resp.headers["Content-Type"] = "application/json"
+ngx.header.content_type = "application/json"
 ngx.say(json.encode(ret))
