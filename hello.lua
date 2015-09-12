@@ -17,13 +17,7 @@ local lib = {}
 local ret = {}
 
 function lib.try(f, args)
-    local status = pcall(f, args and unpack(args) or nil)
-
-    if not status then
-        return
-    else
-        return f()
-    end
+    if pcall(f) then return f() end
 end
 
 
@@ -56,7 +50,7 @@ if exists then
     prior_records[#prior_records] = ret
     redis:set(ngx.var.remote_addr, json.encode(prior_records))
 else
-    redis:set(ngx.var.remote_addr, {json.encode(ret)})
+    redis:set(ngx.var.remote_addr, json.encode({ret}))
 end
 
 
