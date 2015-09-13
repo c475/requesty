@@ -13,6 +13,9 @@ if not ok then
     return
 end
 
+ngx.say(ngx.var.request_uri)
+return
+
 local lib = {}
 local ret = {}
 
