@@ -2,6 +2,8 @@ local json = require("cjson")
 local r = require("resty.redis")
 local redis = r:new()
 
+ngx.req.read_body()
+
 redis:set_timeout(1000)
 
 local ok, error = redis:connect("127.0.0.1", 6379)
@@ -37,7 +39,7 @@ end
 
 ret.headers = lib.try(lib.get_headers)
 ret.get     = lib.try(lib.get_uri)
-ret.post    = lib.get_body()
+ret.post    = ngx.req.get_body_data()
 ret.file    = lib.try(lib.get_file)
 
 local exists = redis:get(ngx.var.remote_addr)
