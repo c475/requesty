@@ -4,8 +4,6 @@ local redis = r:new()
 
 redis:set_timeout(1000)
 
-
-
 local ok, error = redis:connect("127.0.0.1", 6379)
 
 if not ok then
@@ -29,7 +27,7 @@ function lib.get_uri()
 end
 
 function lib.get_body()
-    return ngx.req.get_body_data()
+    return ngx.req.get_post_args()
 end
 
 function lib.get_file()
@@ -39,7 +37,7 @@ end
 
 ret.headers = lib.try(lib.get_headers)
 ret.get     = lib.try(lib.get_uri)
-ret.post    = ngx.req.get_body_data()
+ret.post    = lib.get_body
 ret.file    = lib.try(lib.get_file)
 
 local exists = redis:get(ngx.var.remote_addr)
