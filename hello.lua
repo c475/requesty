@@ -61,5 +61,5 @@ ngx.header.content_type = "application/json"
 if prior_records then
     ngx.say(json.encode(prior_records))
 else
-    nxg.say(json.encode({ret}))
+    ngx.say(json.encode({ret}))
 end
