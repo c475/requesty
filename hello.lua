@@ -14,54 +14,53 @@ if not ok then
 end
 
 ngx.say(ngx.var.request_uri)
-return
 
-local lib = {}
-local ret = {}
+-- local lib = {}
+-- local ret = {}
 
-function lib.try(f, args)
-    if pcall(f) then return f() end
-end
+-- function lib.try(f, args)
+--     if pcall(f) then return f() end
+-- end
 
-function lib.get_headers()
-    return ngx.req.get_headers()
-end
+-- function lib.get_headers()
+--     return ngx.req.get_headers()
+-- end
 
-function lib.get_uri()
-    return ngx.req.get_uri_args()
-end
+-- function lib.get_uri()
+--     return ngx.req.get_uri_args()
+-- end
 
-function lib.get_body()
-    return ngx.req.get_post_args()
-end
+-- function lib.get_body()
+--     return ngx.req.get_post_args()
+-- end
 
-function lib.get_file()
-    return ngx.req.get_body_file()
-end
+-- function lib.get_file()
+--     return ngx.req.get_body_file()
+-- end
 
-ret.method  = ngx.var.request_method
-ret.headers = lib.try(lib.get_headers)
-ret.args    = lib.try(lib.get_uri)
-ret.body    = ngx.req.get_body_data()
-ret.file    = lib.try(lib.get_file)
+-- ret.method  = ngx.var.request_method
+-- ret.headers = lib.try(lib.get_headers)
+-- ret.args    = lib.try(lib.get_uri)
+-- ret.body    = ngx.req.get_body_data()
+-- ret.file    = lib.try(lib.get_file)
 
-local exists = redis:get(ngx.var.remote_addr)
+-- local exists = redis:get(ngx.var.remote_addr)
 
-if type(exists) == "string" then
-    prior_records = json.decode(exists)
-    prior_records[#prior_records+1] = ret
-    redis:set(ngx.var.remote_addr, json.encode(prior_records))
-else
-    redis:set(ngx.var.remote_addr, json.encode({ret}))
-end
+-- if type(exists) == "string" then
+--     prior_records = json.decode(exists)
+--     prior_records[#prior_records+1] = ret
+--     redis:set(ngx.var.remote_addr, json.encode(prior_records))
+-- else
+--     redis:set(ngx.var.remote_addr, json.encode({ret}))
+-- end
 
 
-redis:close()
+-- redis:close()
 
-ngx.header.content_type = "application/json"
+-- ngx.header.content_type = "application/json"
 
-if prior_records then
-    ngx.say(json.encode(prior_records))
-else
-    ngx.say(json.encode({ret}))
-end
+-- if prior_records then
+--     ngx.say(json.encode(prior_records))
+-- else
+--     ngx.say(json.encode({ret}))
+-- end
