@@ -20,7 +20,6 @@ function lib.try(f, args)
     if pcall(f) then return f() end
 end
 
-
 function lib.get_headers()
     return ngx.req.get_headers()
 end
@@ -40,7 +39,7 @@ end
 
 ret.headers = lib.try(lib.get_headers)
 ret.get     = lib.try(lib.get_uri)
-ret.post    = lib.try(lib.get_body())
+ret.post    = lib.get_body()
 ret.file    = lib.try(lib.get_file)
 
 local exists = redis:get(ngx.var.remote_addr)
