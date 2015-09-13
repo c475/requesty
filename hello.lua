@@ -30,7 +30,7 @@ function lib.get_uri()
 end
 
 function lib.get_body()
-    return ngx.req.get_post_args()
+    return ngx.req.get_body_data()
 end
 
 function lib.get_file()
@@ -40,7 +40,7 @@ end
 
 ret.headers = lib.try(lib.get_headers)
 ret.get     = lib.try(lib.get_uri)
-ret.post    = lib.get_body()
+ret.post    = lib.try(lib.get_body())
 ret.file    = lib.try(lib.get_file)
 
 local exists = redis:get(ngx.var.remote_addr)
