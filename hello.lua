@@ -44,22 +44,25 @@ ret.post    = lib.try(lib.get_body)
 ret.file    = lib.try(lib.get_file)
 
 local exists = redis:get(ngx.var.remote_addr)
+local NO = redis:get("NOEXIST")
 
-if type(exists) == "string" then
-    prior_records = json.decode(exists)
-    prior_records[#prior_records] = ret
-    redis:set(ngx.var.remote_addr, json.encode(prior_records))
-else
-    redis:set(ngx.var.remote_addr, json.encode({ret}))
-end
+ngx.say(type(exists) .. " " .. type(NO))
+
+-- if type(exists) == "string" then
+--     prior_records = json.decode(exists)
+--     prior_records[#prior_records] = ret
+--     redis:set(ngx.var.remote_addr, json.encode(prior_records))
+-- else
+--     redis:set(ngx.var.remote_addr, json.encode({ret}))
+-- end
 
 
-redis:close()
+-- redis:close()
 
-ngx.header.content_type = "application/json"
+-- ngx.header.content_type = "application/json"
 
-if prior_records then
-    ngx.say(json.encode(prior_records))
-else
-    nxg.say(json.encode({ret}))
-end
+-- if prior_records then
+--     ngx.say(json.encode(prior_records))
+-- else
+--     nxg.say(json.encode({ret}))
+-- end
