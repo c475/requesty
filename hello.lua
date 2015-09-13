@@ -37,7 +37,7 @@ end
 
 ret.headers = lib.try(lib.get_headers)
 ret.get     = lib.try(lib.get_uri)
-ret.post    = lib.get_body
+ret.post    = lib.get_body()
 ret.file    = lib.try(lib.get_file)
 
 local exists = redis:get(ngx.var.remote_addr)
