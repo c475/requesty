@@ -45,7 +45,7 @@ ret.file    = lib.try(lib.get_file)
 
 local exists = redis:get(ngx.var.remote_addr)
 
-if type(exists) ~= "userdata" then
+if type(exists) == "string" then
     prior_records = json.decode(exists)
     prior_records[#prior_records] = ret
     redis:set(ngx.var.remote_addr, json.encode(prior_records))
