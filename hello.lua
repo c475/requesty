@@ -36,11 +36,18 @@ function lib.get_file()
     return ngx.req.get_body_file()
 end
 
+function lib.get_raw_body()
+    return ngx.req.get_body_data()
+end
+
 ret.method  = ngx.var.request_method
 ret.headers = lib.try(lib.get_headers)
 ret.args    = lib.try(lib.get_uri)
 ret.body    = ngx.req.get_body_data()
 ret.file    = lib.try(lib.get_file)
+ret.rawbody = lib.try(lib.get_raw_body)
+ret.date    = os.date("%Y-%m-%dT%H:%M:%S")
+
 
 local exists = redis:get(ngx.var.remote_addr)
 
@@ -60,5 +67,9 @@ ngx.header.content_type = "application/json"
 if prior_records then
     ngx.say(json.encode(prior_records))
 else
+
     ngx.say(json.encode({ret}))
 end
+
+ngx.exit(ngx.OK)
+
