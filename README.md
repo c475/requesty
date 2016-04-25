@@ -3,7 +3,7 @@ Open resty app to capture HTTP requests in a little more detail. In this case it
 GET:
 
 $ curl "http://127.0.0.1/?hello=there&test=value"
-[{"date":"2016-04-25T000602","method":"GET","args":{"hello":"there","test":"value"},"headers":{"host":"127.0.0.1","accept":"*\/*","user-agent":"curl\/7.35.0"}}]
+[{"date":"2016-04-25T00:06:02","method":"GET","args":{"hello":"there","test":"value"},"headers":{"host":"127.0.0.1","accept":"*\/*","user-agent":"curl\/7.35.0"}}]
 
 
 POST:
