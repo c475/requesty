@@ -9,7 +9,7 @@ redis:set_timeout(1000)
 local ok, error = redis:connect("127.0.0.1", 6379)
 
 if not ok then
-    ngx.say("failed to connect to redis server: ", error)
+    ngx.say("go away")
     return
 end
 
@@ -40,12 +40,17 @@ function lib.get_raw_body()
     return ngx.req.get_body_data()
 end
 
+function lib.get_full_url()
+    return ngx.var.scheme .. "://" .. ngx.var.host .. ngx.var.request_uri
+end
+
 ret.method  = ngx.var.request_method
 ret.headers = lib.try(lib.get_headers)
 ret.args    = lib.try(lib.get_uri)
 ret.body    = ngx.req.get_body_data()
 ret.file    = lib.try(lib.get_file)
 ret.rawbody = lib.try(lib.get_raw_body)
+ret.url     = lib.try(lib.get_full_url)
 ret.date    = os.date("%Y-%m-%dT%H:%M:%S")
 
 
@@ -67,9 +72,7 @@ ngx.header.content_type = "application/json"
 if prior_records then
     ngx.say(json.encode(prior_records))
 else
-
     ngx.say(json.encode({ret}))
 end
 
 ngx.exit(ngx.OK)
-
